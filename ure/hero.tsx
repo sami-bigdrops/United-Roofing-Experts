@@ -1,0 +1,668 @@
+"use client";
+
+import React, { useState, useEffect } from "react";
+import Image from "next/image";
+import { HERO_SECTION } from "@/lib/constant";
+import { Form } from "@/components/ui/form";
+import { FormField, FormItem, FormControl } from "@/components/ui/form";
+import { Button } from "@/components/ui/button";
+import { useForm } from "react-hook-form";
+import TrustedForm from "@/components/TrustedForm";
+import LoadingSpinner from "@/components/LoadingSpinner";
+import "@/app/globals.css";
+
+
+export default function Hero() {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [trustedFormCertUrl, setTrustedFormCertUrl] = useState("");
+  const [subid1, setSubid1] = useState("");
+  const [subid2, setSubid2] = useState("");
+  const [subid3, setSubid3] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const form = useForm({
+    defaultValues: {
+      firstName: "",
+      lastName: "",
+      email: "",
+      phone: "",
+      zip: "",
+    },
+    mode: "onChange",
+  });
+
+  // Handle TrustedForm certificate data
+  const handleTrustedFormReady = (certUrl: string) => {
+    setTrustedFormCertUrl(certUrl);
+  };
+
+  // UTM Parameter Detection with Cookie Fallback
+  useEffect(() => {
+    // Helper function to get cookie value
+    const getCookie = (name: string) => {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop()?.split(";").shift() || "";
+      return "";
+    };
+
+    // Helper function to set cookie
+    const setCookie = (name: string, value: string, days: number = 30) => {
+      const expires = new Date();
+      expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
+      document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
+    };
+
+    const urlParams = new URLSearchParams(window.location.search);
+    let utmSource = urlParams.get("utm_source") || "";
+    let utmId = urlParams.get("utm_id") || "";
+    let utmS1 = urlParams.get("utm_s1") || "";
+
+    // If URL parameters exist, use them and save to cookies
+    if (utmSource || utmId || utmS1) {
+      if (utmSource) setCookie("subid1", utmSource);
+      if (utmId) setCookie("subid2", utmId);
+      if (utmS1) setCookie("subid3", utmS1);
+
+      // Clean the URL by removing UTM parameters
+      const cleanUrl =
+        window.location.protocol +
+        "//" +
+        window.location.host +
+        window.location.pathname;
+      window.history.replaceState({}, document.title, cleanUrl);
+    } else {
+      // If no URL parameters, try to read from cookies
+      utmSource = getCookie("subid1") || "";
+      utmId = getCookie("subid2") || "";
+      utmS1 = getCookie("subid3") || "";
+    }
+
+    setSubid1(utmSource);
+    setSubid2(utmId);
+    setSubid3(utmS1);
+  }, []);
+
+  // Phone Number Formatting
+  const formatPhoneNumber = (value: string) => {
+    // Remove all non-digits
+    const phoneNumber = value.replace(/\D/g, "");
+
+    // Limit to 10 digits
+    const limitedPhoneNumber = phoneNumber.slice(0, 10);
+
+    // Don't format if empty
+    if (limitedPhoneNumber.length === 0) {
+      return "";
+    }
+
+    // Progressive formatting - only add formatting when we have enough digits
+    if (limitedPhoneNumber.length >= 6) {
+      return `(${limitedPhoneNumber.slice(0, 3)}) ${limitedPhoneNumber.slice(
+        3,
+        6
+      )} - ${limitedPhoneNumber.slice(6)}`;
+    } else if (limitedPhoneNumber.length >= 3) {
+      return `(${limitedPhoneNumber.slice(0, 3)}) ${limitedPhoneNumber.slice(
+        3
+      )}`;
+    } else {
+      // No formatting for 1-2 digits
+      return limitedPhoneNumber;
+    }
+  };
+
+  // Zip Code Formatting
+  const formatZipCode = (value: string) => {
+    return value.replace(/\D/g, "").slice(0, 5);
+  };
+
+  const onSubmit = async (data: { firstName: string; lastName: string; email: string; phone: string; zip: string }) => {
+    setIsSubmitting(true);
+
+    try {
+      const submissionData = {
+        ...data,
+        subid1,
+        subid2,
+        subid3,
+        trustedformCertUrl: trustedFormCertUrl,
+      };
+
+      const response = await fetch("/api/submit-form", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(submissionData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(
+          errorData.error || `HTTP error! status: ${response.status}`
+        );
+      }
+
+      const result = await response.json();
+
+      // Store access token in localStorage for thank you page access
+      if (result.accessToken && result.expiresAt) {
+        localStorage.setItem("thankyou_token", result.accessToken);
+        localStorage.setItem("thankyou_expires", result.expiresAt.toString());
+      }
+
+      // Store email for thank you page email sending
+      localStorage.setItem(
+        "form_data",
+        JSON.stringify({
+          email: data.email,
+        })
+      );
+
+      form.reset();
+
+      // Redirect immediately using the redirectUrl from API (same as test page)
+      if (result.redirectUrl) {
+        window.location.href = result.redirectUrl;
+      } else {
+        window.location.href = "/thankyou";
+      }
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "An unexpected error occurred";
+
+      // Show error to user (you could add error state if needed)
+      alert(`Submission failed: ${errorMessage}`);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleFormSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const formData = form.getValues();
+
+    // Check if any field is empty
+    const hasErrors =
+      !formData.firstName ||
+      !formData.lastName ||
+      !formData.email ||
+      !formData.phone ||
+      !formData.zip;
+
+    if (hasErrors) {
+      // Trigger validation to show errors
+      form.trigger();
+    } else {
+      // Submit the form
+      form.handleSubmit(onSubmit)();
+    }
+  };
+
+  const openModal = () => {
+    console.log('Opening modal...');
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  return (
+    <div
+      className="hero p-4 lg:px-14 lg:py-14 lg:pb-10 xl:px-33 md:p-6 w-full h-full"
+      style={{
+        background:
+          "linear-gradient(to right, rgba(30, 30, 30, 0.50), rgba(30, 30, 30, 0.50)), url('/hero-image.webp') no-repeat",
+        backgroundPosition: "left 40% top 30%",
+        backgroundSize: "cover",
+      }}
+    >
+      <div className="container mx-auto">
+        <div className="hero-content flex flex-col items-center justify-center lg:flex-row  gap-5 lg:gap-10 xl:gap-18">
+          <div className="left lg:max-w-[61%] xl:max-w-[50%]  flex flex-col items-center justify-center lg:items-start lg:justify-start gap-2 lg:gap-7 xl:gap-8">
+            <div className="subtitle flex items-end justify-center gap-[10px] lg:gap-[8px] mb-2">
+              <Image
+                src={HERO_SECTION.subtitle.icon}
+                alt="United Roofing Experts"
+                width={50}
+                height={50}
+                className="w-[50px] lg:w-[100px] h-auto"
+              />
+              <p className="text-[0.5rem] lg:text-[0.9rem] font-normal mb-0 text-white -ml-[15px]">
+                {HERO_SECTION.subtitle.text}
+              </p>
+            </div>
+
+            <div
+              className="main-title title text-center max-w-[430px] lg:text-left text-xl md:text-3xl md:max-w-full lg:text-5xl lg:max-w-[500px] xl:text-[2.8rem] xl:max-w-[640px]  font-semibold text-white"
+              style={{ lineHeight: "1.3" }}
+            >
+              <h1>{HERO_SECTION.title}</h1>
+            </div>
+
+            <div
+              className="subtitle hidden font-medium lg:block text-[1.1rem] xl:text-lg 2xl:text-[1.1rem] text-white text-center md:text-left"
+              style={{ lineHeight: "1.6" }}
+            >
+              <p>{HERO_SECTION.description}</p>
+            </div>
+
+            <div className="stats hidden lg:flex text-base flex items-center justify-center border border-white-color rounded-full px-3 py-1 xl:px-3 xl:py-1 gap-2.5  ">
+              <div className="w-full flex items-center justify-center md:w-max ">
+                <Image
+                  src={HERO_SECTION.stats.rating.stars}
+                  alt={HERO_SECTION.stats.rating.text}
+                  width={90}
+                  height={40}
+                  className="w-[100px] h-[50px]"
+                />
+              </div>
+              <div className="w-full flex items-center justify-center md:w-max">
+                <p className=" text-[0.8rem]  xl:text-[0.82rem] font-normal text-white mb-0 text-center whitespace-nowrap">
+                  {HERO_SECTION.stats.rating.text}
+                </p>
+              </div>
+              <div className="hidden md:block">
+                <Image
+                  src={HERO_SECTION.stats.rating.avatars}
+                  alt={HERO_SECTION.stats.rating.text}
+                  width={100}
+                  height={30}
+                  className="w-[90px] h-[35px] "
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="right w-full md:max-w-[50%] lg:max-w-[39%] xl:max-w-[32%] ">
+            <div className="hero-form bg-white p-4 rounded-lg shadow-lg">
+              <div className="title-group flex flex-col items-start justify-start gap-2 mb-3">
+                <div className="hero-title text-left text-primary ">
+                  <h3 className="text-[1rem] md:text-[1.4rem] lg:text-2xl xl:text-[1.7rem]  font-semibold text-left md:px-2">
+                    {HERO_SECTION.form.title}
+                  </h3>
+                </div>
+                <div className="title-description text-left text-color">
+                  <p className="text-[0.7rem] md:text-[0.75rem] lg:text-sm xl:text-base font-normal text-left md:px-2">
+                    {HERO_SECTION.form.description}
+                  </p>
+                </div>
+              </div>
+
+              <Form {...form}>
+                <form onSubmit={handleFormSubmit} className="">
+                  {/* TrustedForm Integration */}
+                  <TrustedForm onCertUrlReady={handleTrustedFormReady} />
+                  
+                  <FormField
+                    control={form.control}
+                    name="firstName"
+                    rules={{ required: "First name is required" }}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <input
+                            {...field}
+                            type="text"
+                            className={`w-full text-xs px-3 py-3 lg:text-sm xl:text-base mb-2 rounded-sm placeholder:text-gray-400 transition-colors duration-200 ${
+                              form.formState.errors.firstName
+                                ? "border-red-600"
+                                : "border-gray-300"
+                            }`}
+                            style={{
+                              border: form.formState.errors.firstName
+                                ? "2px solid #dc2626"
+                                : "1px solid rgba(153, 153, 153, 1)",
+                              outline: "none",
+                            }}
+                            onFocus={(e) => {
+                              e.target.style.borderColor = "var(--primary-color)";
+                              e.target.style.boxShadow =
+                                "0 0 0 2px rgba(0, 40, 104, 0.1)";
+                            }}
+                            onBlur={(e) => {
+                              e.target.style.borderColor =
+                                form.formState.errors.firstName
+                                  ? "#dc2626"
+                                  : "rgba(153, 153, 153, 1)";
+                              e.target.style.boxShadow = "none";
+                            }}
+                            placeholder="First Name"
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="lastName"
+                    rules={{ required: "Last name is required" }}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <input
+                            {...field}
+                            type="text"
+                            className={`w-full text-xs px-3 py-3 lg:text-sm xl:text-base mb-2 rounded-sm placeholder:text-gray-400 transition-colors duration-200 ${
+                              form.formState.errors.lastName
+                                ? "border-red-600"
+                                : "border-gray-300"
+                            }`}
+                            style={{
+                              border: form.formState.errors.lastName
+                                ? "2px solid #dc2626"
+                                : "1px solid rgba(153, 153, 153, 1)",
+                              outline: "none",
+                            }}
+                            onFocus={(e) => {
+                              e.target.style.borderColor = "var(--primary-color)";
+                              e.target.style.boxShadow =
+                                "0 0 0 2px rgba(0, 40, 104, 0.1)";
+                            }}
+                            onBlur={(e) => {
+                              e.target.style.borderColor =
+                                form.formState.errors.lastName
+                                  ? "#dc2626"
+                                  : "rgba(153, 153, 153, 1)";
+                              e.target.style.boxShadow = "none";
+                            }}
+                            placeholder="Last Name"
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="zip"
+                    rules={{ required: "Zip code is required" }}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <input
+                            {...field}
+                            type="text"
+                            maxLength={5}
+                            onChange={(e) => {
+                              const formatted = formatZipCode(e.target.value);
+                              e.target.value = formatted;
+                              field.onChange(e);
+                            }}
+                            className={`w-full text-xs px-3 py-3 lg:text-sm xl:text-base mb-2 rounded-sm placeholder:text-gray-400 transition-colors duration-200 ${
+                              form.formState.errors.zip
+                                ? "border-red-600"
+                                : "border-gray-300"
+                            }`}
+                            style={{
+                              border: form.formState.errors.zip
+                                ? "2px solid #dc2626"
+                                : "1px solid rgba(153, 153, 153, 1)",
+                              outline: "none",
+                            }}
+                            onFocus={(e) => {
+                              e.target.style.borderColor = "var(--primary-color)";
+                              e.target.style.boxShadow =
+                                "0 0 0 2px rgba(0, 40, 104, 0.1)";
+                            }}
+                            onBlur={(e) => {
+                              e.target.style.borderColor =
+                                form.formState.errors.zip
+                                  ? "#dc2626"
+                                  : "rgba(153, 153, 153, 1)";
+                              e.target.style.boxShadow = "none";
+                            }}
+                            placeholder="Zip Code"
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="phone"
+                    rules={{ required: "Phone number is required" }}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <input
+                            {...field}
+                            type="tel"
+                            maxLength={16}
+                            onChange={(e) => {
+                              const formatted = formatPhoneNumber(e.target.value);
+                              e.target.value = formatted;
+                              field.onChange(e);
+                            }}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Backspace') {
+                                const input = e.target as HTMLInputElement;
+                                const currentValue = input.value;
+                                const cursorPosition = input.selectionStart || 0;
+                                
+                                if (currentValue[cursorPosition - 1] === ' ' || 
+                                    currentValue[cursorPosition - 1] === '-' || 
+                                    currentValue[cursorPosition - 1] === ')' ||
+                                    currentValue[cursorPosition - 1] === '(') {
+                                  e.preventDefault();
+                                  const charToCheck = currentValue[cursorPosition - 1];
+                                  let newValue;
+                                  let newCursorPosition;
+                                  
+                                  if (charToCheck === ')' || charToCheck === '(') {
+                                    newValue = currentValue.slice(0, cursorPosition - 1) + currentValue.slice(cursorPosition);
+                                    newCursorPosition = Math.max(0, cursorPosition - 1);
+                                  } else if (charToCheck === ' ') {
+                                    const prevChar = currentValue[cursorPosition - 2];
+                                    if (prevChar === '-' || prevChar === ')') {
+                                      newValue = currentValue.slice(0, cursorPosition - 2) + currentValue.slice(cursorPosition);
+                                      newCursorPosition = Math.max(0, cursorPosition - 2);
+                                    } else {
+                                      newValue = currentValue.slice(0, cursorPosition - 1) + currentValue.slice(cursorPosition);
+                                      newCursorPosition = Math.max(0, cursorPosition - 1);
+                                    }
+                                  } else {
+                                    newValue = currentValue.slice(0, cursorPosition - 1) + currentValue.slice(cursorPosition);
+                                    newCursorPosition = Math.max(0, cursorPosition - 1);
+                                  }
+                                  
+                                  input.value = newValue;
+                                  setTimeout(() => {
+                                    input.setSelectionRange(newCursorPosition, newCursorPosition);
+                                  }, 0);
+                                  field.onChange({ target: { value: newValue } });
+                                }
+                              }
+                            }}
+                            className={`w-full text-xs px-3 py-3 lg:text-sm xl:text-base mb-2 rounded-sm placeholder:text-gray-400 transition-colors duration-200 ${
+                              form.formState.errors.phone
+                                ? "border-red-600"
+                                : "border-gray-300"
+                            }`}
+                            style={{
+                              border: form.formState.errors.phone
+                                ? "2px solid #dc2626"
+                                : "1px solid rgba(153, 153, 153, 1)",
+                              outline: "none",
+                            }}
+                            onFocus={(e) => {
+                              e.target.style.borderColor = "var(--primary-color)";
+                              e.target.style.boxShadow =
+                                "0 0 0 2px rgba(0, 40, 104, 0.1)";
+                            }}
+                            onBlur={(e) => {
+                              e.target.style.borderColor =
+                                form.formState.errors.phone
+                                  ? "#dc2626"
+                                  : "rgba(153, 153, 153, 1)";
+                              e.target.style.boxShadow = "none";
+                            }}
+                            placeholder="Phone"
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="email"
+                    rules={{
+                      required: "Email is required",
+                      pattern: {
+                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                        message: "Invalid email address",
+                      },
+                    }}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <input
+                            {...field}
+                            type="email"
+                            className={`w-full text-xs px-3 py-3 lg:text-sm xl:text-base mb-2 rounded-sm placeholder:text-gray-400 transition-colors duration-200 ${
+                              form.formState.errors.email
+                                ? "border-red-600"
+                                : "border-gray-300"
+                            }`}
+                            style={{
+                              border: form.formState.errors.email
+                                ? "2px solid #dc2626"
+                                : "1px solid rgba(153, 153, 153, 1)",
+                              outline: "none",
+                            }}
+                            onFocus={(e) => {
+                              e.target.style.borderColor = "var(--primary-color)";
+                              e.target.style.boxShadow =
+                                "0 0 0 2px rgba(0, 40, 104, 0.1)";
+                            }}
+                            onBlur={(e) => {
+                              e.target.style.borderColor =
+                                form.formState.errors.email
+                                  ? "#dc2626"
+                                  : "rgba(153, 153, 153, 1)";
+                              e.target.style.boxShadow = "none";
+                            }}
+                            placeholder="Email"
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+
+                  <div
+                    className="text-[10px] xl:text-[0.75rem] text-justify text-shw-secondary mt-2 mb-3 xl:mt-3 xl:mb-5"
+                    style={{ color: "#333333", lineHeight: "1.6" }}
+                  >
+                    <p>
+                      By submitting this form, I agree to the United Roofing Experts{" "}
+                      <a
+                        href="/terms-of-use"
+                        className="text-primary cursor-pointer hover:text-secondary transition-colors"
+                      >
+                        Terms of Use
+                      </a>{" "}
+                      and{" "}
+                      <a
+                        href="/privacy-policy"
+                        className="text-primary cursor-pointer hover:text-secondary transition-colors"
+                      >
+                        Privacy Policy
+                      </a>
+                      . I authorize United Roofing Experts and its{" "}
+                      <button
+                        type="button"
+                        className="text-primary partners-link hover:text-secondary transition-colors cursor-pointer bg-transparent border-none p-0"
+                        onClick={openModal}
+                      >
+                        partners
+                      </button>{" "}
+                      to send me marketing text messages or phone calls at the number provided, including those made with an autodialer. Standard message and data rates may apply. Message frequency varies. Opt-out anytime by replying STOP or using the unsubscribe link.
+                    </p>
+                  </div>
+
+                  <Button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className={`submit-btn w-full text-xs md:text-sm xl:text-base font-normal bg-primary text-white px-5 py-5 md:py-5 2xl:py-6 relative overflow-hidden transition-all duration-300 ease-in-out z-10 hover:bg-secondary ${
+                      isSubmitting ? "opacity-50 cursor-not-allowed" : ""
+                    }`}
+                  >
+                    {isSubmitting ? (
+                      <span className="flex items-center justify-center gap-2">
+                        <LoadingSpinner size="sm" />
+                        Submitting...
+                      </span>
+                    ) : (
+                      <span>{HERO_SECTION.form.submitText}</span>
+                    )}
+                  </Button>
+                </form>
+              </Form>
+            </div>
+          </div>
+
+         
+        </div>
+
+       {/* <div className="offer-badge flex items-center justify-center mt-5">
+         <div 
+           className="relative overflow-hidden w-fit mx-auto px-4 py-2 rounded-sm mt-[10px] xl:mt-[20px]"
+           style={{
+             backgroundColor: '#FEBF00',
+            
+           }}
+         >
+           <div 
+             className="absolute -top-1/2 -left-1/2 w-[200%] h-[200%] bg-gradient-to-r from-transparent via-white/30 to-transparent rotate-45 animate-[shimmer_2s_infinite]"
+             
+           />
+           <p className="relative z-10 text-[0.8rem] xl:text-[1.1rem] font-medium text-gray-800 mb-0">
+             {HERO_SECTION.offerBadge}
+           </p>
+         </div>
+       </div> */}
+
+      
+
+       {/* Partners Modal */}
+       {isModalOpen && (
+         <div 
+           id="partners-modal" 
+           className="modal fixed inset-0 w-full h-full z-[1000] bg-black/50 flex items-center justify-center"
+         >
+           <div className="modal-content bg-white rounded-lg w-[90%] max-w-[500px] md:max-w-[600px] lg:max-w-[800px] xl:max-w-[850px] max-h-[90vh] lg:max-h-[95vh] overflow-y-auto transform translate-y-0 transition-transform duration-300 ease-in-out">
+             <div
+               className="modal-header flex justify-between items-center p-[15px] border-2 border-placeholder"
+               style={{ border: "1px solid var(--placeholder-color)" }}
+             >
+               <h3 className="m-0 text-[1.2rem] md:text-[1.3rem] xl:text-[1.4rem] font-semibold text-heading">Our Partners</h3>
+               <button 
+                 className="close-modal bg-none border-none text-[1.5rem] lg:text-[1.6rem] xl:text-[1.9rem] text-color cursor-pointer p-0 w-auto hover:text-primary hover:bg-none"
+                 onClick={closeModal}
+               >
+                 &times;
+               </button>
+             </div>
+             <div className="modal-body p-[15px] xl:p-[20px]">
+               <div className="partners-grid grid grid-cols-1 md:grid-cols-2 gap-[15px] xl:gap-[28px]">
+                 {HERO_SECTION.partners.map((partner, index) => (
+                   <div key={index} className="partner-item flex flex-col items-center gap-[10px] p-[10px] rounded"   style={{ border: "1px solid var(--placeholder-color)" }}>
+                     <p className="m-0 text-[0.8rem] md:text-[0.9rem] xl:text-[1rem]  text-color text-center">{partner}</p>
+                   </div>
+                 ))}
+               </div>
+             </div>
+           </div>
+         </div>
+       )}
+      </div>
+    </div>
+  );
+}
