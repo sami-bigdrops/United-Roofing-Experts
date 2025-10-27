@@ -253,7 +253,7 @@ export default function PrivacyPolicy() {
                       lineHeight: '1.8'
                     }}
                   >
-                    Our Website may contain links to other sites that are not operated by us. If you click a third party link, you will be directed to that third party's site. We strongly advise you to review the Privacy Policy of every site you visit.
+                    Our Website may contain links to other sites that are not operated by us. If you click a third party link, you will be directed to that third party&apos;s site. We strongly advise you to review the Privacy Policy of every site you visit.
                   </p>
 
                   <p
@@ -279,7 +279,7 @@ export default function PrivacyPolicy() {
                       lineHeight: '1.8'
                     }}
                   >
-                    Except as described in this statement, we will not disclose your Data outside of Erie Home, Erie Home_BC, Erie Roofing, Roof Savings Pro, and United Roofing Experts and their controlled subsidiaries and affiliates, without your consent. This Privacy Policy details United Roofing Experts use and sharing of your Data, which includes sharing of Data with Erie Home, Erie Home_BC, Erie Roofing, Roof Savings Pro. United Roofing Experts has no control over Erie Home, Erie Home_BC, Erie Roofing, Roof Savings Pro or their use or sharing of any Data, nor does United Roofing Experts make any representations or warranties about how Data is managed by Erie Home, Erie Home_BC, Erie Roofing, Roof Savings Pro. You should review Erie Home, Erie Home_BC, Erie Roofing, Roof Savings Pro's Privacy Policy to determine how Data is managed by Erie Home, Erie Home_BC, Erie Roofing, Roof Savings Pro – which is available at their own website, currently located at: <a href="https://eriemetalroofs.com/privacy-policy/" className="text-blue-600 hover:text-blue-800 ">https://eriemetalroofs.com/privacy-policy/</a>
+                    Except as described in this statement, we will not disclose your Data outside of Erie Home, Erie Home_BC, Erie Roofing, Roof Savings Pro, and United Roofing Experts and their controlled subsidiaries and affiliates, without your consent. This Privacy Policy details United Roofing Experts use and sharing of your Data, which includes sharing of Data with Erie Home, Erie Home_BC, Erie Roofing, Roof Savings Pro. United Roofing Experts has no control over Erie Home, Erie Home_BC, Erie Roofing, Roof Savings Pro or their use or sharing of any Data, nor does United Roofing Experts make any representations or warranties about how Data is managed by Erie Home, Erie Home_BC, Erie Roofing, Roof Savings Pro. You should review Erie Home, Erie Home_BC, Erie Roofing, Roof Savings Pro&apos;s Privacy Policy to determine how Data is managed by Erie Home, Erie Home_BC, Erie Roofing, Roof Savings Pro – which is available at their own website, currently located at: <a href="https://eriemetalroofs.com/privacy-policy/" className="text-blue-600 hover:text-blue-800 ">https://eriemetalroofs.com/privacy-policy/</a>
                   </p>
 
                   <p
@@ -306,7 +306,7 @@ export default function PrivacyPolicy() {
                     className="text-lg sm:text-xl md:text-2xl font-medium mb-4"
                     style={{ color: 'var(--primary-color)' }}
                   >
-                    CHILDREN'S PRIVACY
+                    CHILDREN&apos;S PRIVACY
                   </h2>
                   <p
                     className="text-xs sm:text-sm md:text-base lg:text-lg leading-relaxed mb-5"
@@ -315,7 +315,7 @@ export default function PrivacyPolicy() {
                       lineHeight: '1.8'
                     }}
                   >
-                    This Website is intended for adults in the United States. Our Website does not address anyone under the age of 18 (&quot;Child&quot; or &quot;Children&quot;). We do not knowingly collect Data from anyone under the age of 18. If you are a parent or guardian and you are aware that your Child has provided us with Personal Information, please contact us. If we become aware that we have collected Personal Information from Children without verification of parental consent, we take steps to remove that information from our servers.
+                    This Website is intended for adults in the United States. Our Website does not address anyone under the age of 18 (&quot;Child&quot; or &quot;Children&apos;&quot;). We do not knowingly collect Data from anyone under the age of 18. If you are a parent or guardian and you are aware that your Child has provided us with Personal Information, please contact us. If we become aware that we have collected Personal Information from Children without verification of parental consent, we take steps to remove that information from our servers.
                   </p>
 
                   <h2
@@ -415,7 +415,7 @@ export default function PrivacyPolicy() {
                       lineHeight: '1.8'
                     }}
                   >
-                    We will let you know via email and/or a prominent notice on our Website, prior to the change becoming effective and update the "effective date" at the top of this Privacy Policy.
+                      We will let you know via email and/or a prominent notice on our Website, prior to the change becoming effective and update the &quot;effective date&quot; at the top of this Privacy Policy.
                   </p>
                   <p
                     className="text-xs sm:text-sm md:text-base lg:text-lg leading-relaxed mb-5"
@@ -444,7 +444,7 @@ export default function PrivacyPolicy() {
                   </p>
                   <ul className="list-disc list-inside ml-4 mt-2 space-y-1">
                     <li>By email: <a href="mailto:contact@unitedroofingexperts.com" className="text-blue-600 hover:text-blue-800 ">contact@unitedroofingexperts.com</a></li>
-                    <li>Or, write to: 5520 Glades Cut-off road #K9224, Fort Pierce, FL, 3498</li>
+                    <li>Or, write to: 5520 Glades Cut-off road #K9224, Fort Pierce, FL, 34981</li>
                     <li>If you want to stop the delivery of future promotional communications from our Website, you can email us at the address above, or by following the specific instructions in any e-mail you receive to unsubscribe. Any such requests to stop delivery of promotional communications from our Website, will cease the delivery of communications from this Website alone. If you are receiving promotional communications from other companies or websites with whom we shared your Data, you will need to unsubscribe from their promotional communications directly through those companies.</li>
                   </ul>
 
@@ -461,7 +461,7 @@ export default function PrivacyPolicy() {
                       lineHeight: '1.8'
                     }}
                   >
-                    The information and terms in this Nevada section supplement the information and terms contained in the rest of this Privacy Policy and applies to you if you reside in Nevada. We adopt these terms to comply with the Nevada Senate Bill 220 (an Act relating to Internet privacy), Nevada Revised Statutes Chapter 603A, and other state privacy laws (all such laws are collectively referred to for purposes of this Privacy Policy as the "Nevada Privacy Laws"). Any terms defined in the Nevada Privacy Laws have the same meaning when used in section of this Privacy Policy.
+                    The information and terms in this Nevada section supplement the information and terms contained in the rest of this Privacy Policy and applies to you if you reside in Nevada. We adopt these terms to comply with the Nevada Senate Bill 220 (an Act relating to Internet privacy), Nevada Revised Statutes Chapter 603A, and other state privacy laws (all such laws are collectively referred to for purposes of this Privacy Policy as the &quot;Nevada Privacy Laws&quot;). Any terms defined in the Nevada Privacy Laws have the same meaning when used in section of this Privacy Policy.
                   </p>
 
                   <p
@@ -471,7 +471,7 @@ export default function PrivacyPolicy() {
                       lineHeight: '1.8'
                     }}
                   >
-                    Residents of Nevada may request a list of all third parties to which we, through the Website, have disclosed certain information during the preceding year for the third parties' direct marketing purposes. If you are a Nevada resident and want such a list, please contact us at <a href="mailto:contact@unitedroofingexperts.com" className="text-blue-600 hover:text-blue-800 ">contact@unitedroofingexperts.com</a>. For all requests, you must put the statement "Your Nevada Privacy Rights" in the subject line and body of your request, as well as your name, street address, city, state, and zip code. Please note that we will not accept requests via the telephone, mail, or by facsimile, and we are not responsible for notices that are not labeled or sent properly, or that do not have complete information.
+                    Residents of Nevada may request a list of all third parties to which we, through the Website, have disclosed certain information during the preceding year for the third parties&apos; direct marketing purposes. If you are a Nevada resident and want such a list, please contact us at <a href="mailto:contact@unitedroofingexperts.com" className="text-blue-600 hover:text-blue-800 ">contact@unitedroofingexperts.com</a>. For all requests, you must put the statement &quot;Your Nevada Privacy Rights&quot; in the subject line and body of your request, as well as your name, street address, city, state, and zip code. Please note that we will not accept requests via the telephone, mail, or by facsimile, and we are not responsible for notices that are not labeled or sent properly, or that do not have complete information.
                   </p>
                   <ol type="a" className="list-[lower-alpha] list-inside space-y-4">
                     <li>
@@ -497,17 +497,17 @@ export default function PrivacyPolicy() {
                           <tbody>
                             <tr className="hover:bg-gray-50">
                               <td className="border border-gray-300 px-2 py-2 font-medium">Identifiers</td>
-                              <td className="border border-gray-300 px-2 py-2" style={{ color: 'var(--text-color)' }}>A real name, alias, postal address, unique personal identifier, online identifier, Internet Protocol address, email address, account name, Social Security number, driver's license number, passport number, or other similar identifiers.</td>
+                              <td className="border border-gray-300 px-2 py-2" style={{ color: 'var(--text-color)' }}>A real name, alias, postal address, unique personal identifier, online identifier, Internet Protocol address, email address, account name, Social Security number, driver&apos;s license number, passport number, or other similar identifiers.</td>
                               <td className="border border-gray-300 px-2 py-2 text-center font-medium text-color">YES</td>
                             </tr>
                             <tr className="hover:bg-gray-50">
                               <td className="border border-gray-300 px-2 py-2 font-medium">Personal Information</td>
-                              <td className="border border-gray-300 px-2 py-2" style={{ color: 'var(--text-color)' }}>A name, signature, Social Security number, physical characteristics or description, address, telephone number, passport number, driver's license or state identification card number, insurance policy number, education, employment, employment history, bank account number, credit card number, debit card number, or any other financial information, medical information, or health insurance information. Some personal information included in this category may overlap with other categories.</td>
+                              <td className="border border-gray-300 px-2 py-2" style={{ color: 'var(--text-color)' }}>A name, signature, Social Security number, physical characteristics or description, address, telephone number, passport number, driver&apos;s license or state identification card number, insurance policy number, education, employment, employment history, bank account number, credit card number, debit card number, or any other financial information, medical information, or health insurance information. Some personal information included in this category may overlap with other categories.</td>
                               <td className="border border-gray-300 px-2 py-2 text-center font-medium text-color">YES</td>
                             </tr>
                             <tr className="hover:bg-gray-50">
                               <td className="border border-gray-300 px-2 py-2 font-medium">Protected classification characteristics under state or federal law</td>
-                              <td className="border border-gray-300 px-2 py-2" style={{ color: 'var(--text-color)' }}>Age (40 years or older), race, color, ancestry, national origin (including language use and possession of a driver's license issued to persons unable to provide their presence in the United States as authorized under federal law), citizenship, religion or creed (including religious dress and grooming practices), marital status, medical condition (including cancer or a record or history of cancer), AIDS/HIV, physical or mental disability, sex (including gender, gender identity, gender expression, pregnancy, childbirth, breastfeeding and related medical conditions), sexual orientation, veteran or military status, Political affiliations or activities, status as a victim of domestic violence, assault, or stalking, genetic information (including familial genetic information), request for family care leave, request for leave for an employee's own serious health condition, request for Pregnancy Disability Leave, retaliation for reporting patient abuse in tax-supported institutions.</td>
+                              <td className="border border-gray-300 px-2 py-2" style={{ color: 'var(--text-color)' }}>Age (40 years or older), race, color, ancestry, national origin (including language use and possession of a driver&apos;s license issued to persons unable to provide their presence in the United States as authorized under federal law), citizenship, religion or creed (including religious dress and grooming practices), marital status, medical condition (including cancer or a record or history of cancer), AIDS/HIV, physical or mental disability, sex (including gender, gender identity, gender expression, pregnancy, childbirth, breastfeeding and related medical conditions), sexual orientation, veteran or military status, Political affiliations or activities, status as a victim of domestic violence, assault, or stalking, genetic information (including familial genetic information), request for family care leave, request for leave for an employee&apos;s own serious health condition, request for Pregnancy Disability Leave, retaliation for reporting patient abuse in tax-supported institutions.</td>
                               <td className="border border-gray-300 px-2 py-2 text-center font-medium text-color">NO</td>
                             </tr>
                             <tr className="hover:bg-gray-50">
@@ -522,7 +522,7 @@ export default function PrivacyPolicy() {
                             </tr>
                             <tr className="hover:bg-gray-50">
                               <td className="border border-gray-300 px-2 py-2 font-medium">Internet or similar network activity</td>
-                              <td className="border border-gray-300 px-2 py-2" style={{ color: 'var(--text-color)' }}>Browsing history, search history, information on a consumer's interaction with a website, application, or advertisement.</td>
+                              <td className="border border-gray-300 px-2 py-2" style={{ color: 'var(--text-color)' }}>Browsing history, search history, information on a consumer&apos;s interaction with a website, application, or advertisement.</td>
                               <td className="border border-gray-300 px-2 py-2 text-center font-medium text-color">YES</td>
                             </tr>
                             <tr className="hover:bg-gray-50">
@@ -547,7 +547,7 @@ export default function PrivacyPolicy() {
                             </tr>
                             <tr className="hover:bg-gray-50">
                               <td className="border border-gray-300 px-2 py-2 font-medium">Inferences drawn from other personal information</td>
-                              <td className="border border-gray-300 px-2 py-2" style={{ color: 'var(--text-color)' }}>Profile reflecting a consumer's preferences, characteristics, psychological trends, predispositions, behavior, attitudes, intelligence, abilities, and aptitudes.</td>
+                              <td className="border border-gray-300 px-2 py-2" style={{ color: 'var(--text-color)' }}>Profile reflecting a consumer&apos;s preferences, characteristics, psychological trends, predispositions, behavior, attitudes, intelligence, abilities, and aptitudes.</td>
                               <td className="border border-gray-300 px-2 py-2 text-center font-medium text-color">NO</td>
                             </tr>
                           </tbody>
@@ -642,7 +642,7 @@ export default function PrivacyPolicy() {
                         <li>Detect security incidents, protect against malicious, deceptive, fraudulent, or illegal activity, or prosecute those responsible for such activities.</li>
                         <li>Debug products to identify and repair errors that impair existing intended functionality.</li>
                         <li>Exercise free speech and/or ensure the right of another consumer to exercise their free speech rights, or exercise another right provided for by law.</li>
-                        <li>Engage in public or peer-reviewed scientific, historical, or statistical research in the public interest that adheres to all other applicable ethics and privacy laws, when the information's deletion may likely render impossible or seriously impair the research's achievement, if you previously provided informed consent.</li>
+                        <li>Engage in public or peer-reviewed scientific, historical, or statistical research in the public interest that adheres to all other applicable ethics and privacy laws, when the information&apos;s deletion may likely render impossible or seriously impair the research&apos;s achievement, if you previously provided informed consent.</li>
                         <li>Enable solely internal uses that are reasonably aligned with consumer expectations based on your relationship with us.</li>
                         <li>Comply with a legal obligation.</li>
                         <li>Make other internal and lawful uses of that information that are compatible with the context in which you provided it.</li>
@@ -667,7 +667,7 @@ export default function PrivacyPolicy() {
                         You may only make a verifiable consumer request for access or data portability twice within a 12-month period. The verifiable consumer request must:  (i) provide sufficient information that allows us to reasonably verify you are the person about whom we collected personal information or an authorized representative; and (ii) describe your request with sufficient detail that allows us to properly understand, evaluate, and respond to it.
                       </p>
                       <p className="text-xs sm:text-sm md:text-base lg:text-lg leading-relaxed mb-3" style={{ color: 'var(--text-color)', lineHeight: '1.8' }}>
-                        We cannot respond to your request or provide you with Personal Information if we cannot verify your identity or authority to make the request and confirm the personal information relates to you. Making a verifiable consumer request does not require you to create an account with us. We will only use personal information provided in a verifiable consumer request to verify the requestor's identity or authority to make the request.
+                        We cannot respond to your request or provide you with Personal Information if we cannot verify your identity or authority to make the request and confirm the personal information relates to you. Making a verifiable consumer request does not require you to create an account with us. We will only use personal information provided in a verifiable consumer request to verify the requestor&apos;s identity or authority to make the request.
                       </p>
                     </li>
                     <li>
