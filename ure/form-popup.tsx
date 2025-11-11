@@ -1,11 +1,12 @@
 'use client'
-import React, { useState } from 'react'
-import Image from 'next/image'
+import React, { useState, useEffect } from 'react'
 import { HERO_SECTION } from '@/lib/constant'
 import { Form } from '@/components/ui/form'
 import { FormField, FormItem, FormControl } from '@/components/ui/form'
 import { Button } from '@/components/ui/button'
 import { useForm } from 'react-hook-form'
+import TrustedForm from '@/components/TrustedForm'
+import LoadingSpinner from '@/components/LoadingSpinner'
 
 interface FormPopupProps {
   isOpen: boolean
@@ -30,6 +31,33 @@ export default function FormPopup({ isOpen, onClose }: FormPopupProps) {
     },
     mode: 'onChange',
   })
+
+  // Handle TrustedForm certificate data
+  const handleTrustedFormReady = (certUrl: string) => {
+    setTrustedFormCertUrl(certUrl);
+  };
+
+  // UTM Parameter Detection with Cookie Fallback
+  useEffect(() => {
+    if (!isOpen) return;
+
+    // Helper function to get cookie value
+    const getCookie = (name: string) => {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop()?.split(';').shift() || '';
+      return '';
+    };
+
+    // Read UTM values from cookies (they should already be set by hero component)
+    const utmSource = getCookie('subid1') || "";
+    const utmId = getCookie('subid2') || "";
+    const utmS1 = getCookie('subid3') || "";
+
+    setSubid1(utmSource);
+    setSubid2(utmId);
+    setSubid3(utmS1);
+  }, [isOpen]);
 
   // Phone Number Formatting
   const formatPhoneNumber = (value: string) => {
@@ -59,7 +87,7 @@ export default function FormPopup({ isOpen, onClose }: FormPopupProps) {
     return value.replace(/\D/g, '').slice(0, 5)
   }
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: { firstName: string; lastName: string; email: string; phone: string; zip: string }) => {
     setIsSubmitting(true)
 
     try {
@@ -183,6 +211,9 @@ export default function FormPopup({ isOpen, onClose }: FormPopupProps) {
 
           <Form {...form}>
             <form onSubmit={handleFormSubmit} className="space-y-4">
+              {/* TrustedForm Integration */}
+              <TrustedForm onCertUrlReady={handleTrustedFormReady} />
+              
               <div className="grid grid-cols-1  gap-4">
                 <FormField
                   control={form.control}
@@ -476,12 +507,19 @@ export default function FormPopup({ isOpen, onClose }: FormPopupProps) {
 
               <Button
                 type="submit"
-                className="submit-btn w-full text-sm md:text-base font-normal bg-primary text-white px-5 py-4 md:py-5 lg:py-6 relative overflow-hidden transition-all duration-300 ease-in-out z-10 hover:bg-secondary before:content-[''] before:absolute before:-top-1/2 before:-left-1/2 before:w-[200%] before:h-[200%] before:bg-gradient-to-r before:from-transparent before:via-white/30 before:to-transparent before:rotate-45 before:animate-shimmer before:z-[-1] before:animate-[shimmer_2s_infinite]"
+                className={`submit-btn w-full text-sm md:text-base font-normal bg-primary text-white px-5 py-4 md:py-5 lg:py-6 relative overflow-hidden transition-all duration-300 ease-in-out z-10 hover:bg-secondary before:content-[''] before:absolute before:-top-1/2 before:-left-1/2 before:w-[200%] before:h-[200%] before:bg-gradient-to-r before:from-transparent before:via-white/30 before:to-transparent before:rotate-45 before:animate-shimmer before:z-[-1] before:animate-[shimmer_2s_infinite] ${
+                  isSubmitting ? "opacity-50 cursor-not-allowed" : ""
+                }`}
                 disabled={isSubmitting}
               >
-                <span>
-                  {isSubmitting ? 'Submitting...' : HERO_SECTION.form.submitText}
-                </span>
+                {isSubmitting ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <LoadingSpinner size="sm" />
+                    Submitting...
+                  </span>
+                ) : (
+                  <span>{HERO_SECTION.form.submitText}</span>
+                )}
               </Button>
             </form>
           </Form>
