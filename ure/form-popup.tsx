@@ -174,6 +174,96 @@ export default function FormPopup({ isOpen, onClose }: FormPopupProps) {
     setIsPartnerModalOpen(false)
   }
 
+  // Prevent body scroll when main form modal is open
+  useEffect(() => {
+    if (isOpen) {
+      // Store current scroll position
+      const scrollY = window.scrollY;
+      
+      // Add CSS class for additional mobile support
+      document.body.classList.add('modal-open');
+      
+      // Apply styles to prevent scrolling
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.left = '0';
+      document.body.style.right = '0';
+      document.body.style.overflow = 'hidden';
+      document.body.style.width = '100%';
+      
+      // Store scroll position for restoration
+      document.body.setAttribute('data-scroll-y', scrollY.toString());
+      
+      // Cleanup function
+      return () => {
+        // Restore scroll position
+        const storedScrollY = document.body.getAttribute('data-scroll-y');
+        
+        // Remove CSS class
+        document.body.classList.remove('modal-open');
+        
+        // Reset body styles
+        document.body.style.position = '';
+        document.body.style.top = '';
+        document.body.style.left = '';
+        document.body.style.right = '';
+        document.body.style.overflow = '';
+        document.body.style.width = '';
+        document.body.removeAttribute('data-scroll-y');
+        
+        // Restore scroll position
+        if (storedScrollY) {
+          window.scrollTo(0, parseInt(storedScrollY));
+        }
+      };
+    }
+  }, [isOpen]);
+
+  // Prevent body scroll when partner modal is open
+  useEffect(() => {
+    if (isPartnerModalOpen) {
+      // Store current scroll position
+      const scrollY = window.scrollY;
+      
+      // Add CSS class for additional mobile support
+      document.body.classList.add('modal-open');
+      
+      // Apply styles to prevent scrolling
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.left = '0';
+      document.body.style.right = '0';
+      document.body.style.overflow = 'hidden';
+      document.body.style.width = '100%';
+      
+      // Store scroll position for restoration
+      document.body.setAttribute('data-scroll-y', scrollY.toString());
+      
+      // Cleanup function
+      return () => {
+        // Restore scroll position
+        const storedScrollY = document.body.getAttribute('data-scroll-y');
+        
+        // Remove CSS class
+        document.body.classList.remove('modal-open');
+        
+        // Reset body styles
+        document.body.style.position = '';
+        document.body.style.top = '';
+        document.body.style.left = '';
+        document.body.style.right = '';
+        document.body.style.overflow = '';
+        document.body.style.width = '';
+        document.body.removeAttribute('data-scroll-y');
+        
+        // Restore scroll position
+        if (storedScrollY) {
+          window.scrollTo(0, parseInt(storedScrollY));
+        }
+      };
+    }
+  }, [isPartnerModalOpen]);
+
   if (!isOpen) return null
 
   return (
